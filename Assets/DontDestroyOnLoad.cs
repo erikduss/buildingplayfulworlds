@@ -1,0 +1,73 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class DontDestroyOnLoad : MonoBehaviour
+{
+    private Slider loadingbar;
+    public float progress = 0;
+
+    void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("SceneStates");
+
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    private IEnumerator StartGameScene()
+    {
+        /*if (loadingbar == null)
+        {
+            loadingbar = GameObject.FindWithTag("loadingBar").GetComponent<Slider>();
+        }*/
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameScene");
+        asyncLoad.allowSceneActivation = false;
+
+        // Wait until the asynchronous scene fully loads
+
+        progress = asyncLoad.progress;
+
+        //loadingbar.value = asyncLoad.progress;
+        
+
+        while (!asyncLoad.isDone)
+        {
+            Debug.Log(asyncLoad.progress);
+
+            progress = asyncLoad.progress;
+
+            if (asyncLoad.progress >= 0.9f)
+            {
+                //Change the Text to show the Scene is ready
+                Debug.Log("Press the space bar to continue");
+                //Wait to you press the space key to activate the Scene
+                if (Input.GetKeyDown(KeyCode.Space))
+                    //Activate the Scene
+                    asyncLoad.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
+
+        if (asyncLoad.isDone)
+        {
+            progress = asyncLoad.progress;
+            asyncLoad.allowSceneActivation = true;
+            SceneManager.LoadScene("GameScene"); // Dont know why the async doesnt work, temporary load fix.
+        }
+    }
+
+    private IEnumerator startLoading()
+    {
+       new WaitForSeconds(2);
+       StartCoroutine("StartGameScene");
+       return null;
+    }
+}
