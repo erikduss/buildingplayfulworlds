@@ -7,11 +7,12 @@ public class pickUpItem : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public GameController gameManager;
+    private GameController gameManager;
     public Text pickupText;
 
     void Start()
     {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
         pickupText.gameObject.SetActive(false);
     }
 
