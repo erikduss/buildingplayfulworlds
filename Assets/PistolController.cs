@@ -4,6 +4,21 @@ using UnityEngine;
 
 public class PistolController : MonoBehaviour
 {
+
+    // projectile
+    public float ProjectileTapFiringRate = 0.1f;        // minimum delay between shots fired when fire button is tapped quickly and repeatedly
+    protected float m_LastFireTime = 0.0f;
+    protected float m_OriginalProjectileSpawnDelay = 0.0f;
+
+    // motion
+    public Vector3 MotionPositionRecoil = new Vector3(0, 0, -0.035f);   // positional force applied to weapon upon firing
+    public Vector3 MotionRotationRecoil = new Vector3(-10.0f, 0, 0);    // angular force applied to weapon upon firing
+    public float MotionRotationRecoilDeadZone = 0.5f;   // 'blind spot' center region for angular z recoil
+    public float MotionDryFireRecoil = -0.1f;           // multiplies recoil when the weapon is out of ammo
+    public float MotionRecoilDelay = 0.0f;				// delay between fire button pressed and recoil
+
+    public float m_NextAllowedFireTime = 0;
+
     private GameController gameManager;
     private Animation anim_pistol;
 
@@ -20,6 +35,10 @@ public class PistolController : MonoBehaviour
     private AudioSource pistolSoundSource;
 
     public AudioClip pistolFire;
+    public AudioClip SoundDryFire;
+
+    public Camera aimCamera;
+    public Camera playerCamera;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +46,7 @@ public class PistolController : MonoBehaviour
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
         pistolSoundSource = this.GetComponent<AudioSource>();
         anim_pistol = this.GetComponent<Animation>();
+        m_NextAllowedFireTime = Time.time;
     }
 
     // Update is called once per frame
@@ -44,11 +64,7 @@ public class PistolController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            bulletTrail.Play();
-            anim_pistol.Play("Fire");
-            bulletFlash.enabled = true;
-            pistolSoundSource.clip = pistolFire;
-            pistolSoundSource.Play();
+            OnAttempt_Fire();
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -63,6 +79,22 @@ public class PistolController : MonoBehaviour
             if (currentPistolAnim > pistolIdleAnims) currentPistolAnim = 1;
             waitWithAnim = true;
             StartCoroutine("WaitWithNewAnim", Random.Range(2, 10));
+        }
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            this.transform.localPosition = new Vector3(-0.121f, -0.173f, 0.418f);
+            aimCamera.fieldOfView = 10;
+            playerCamera.fieldOfView = 45;
+            aimCamera.nearClipPlane = 0.01f;
+            
+        }
+        else if (aimCamera.fieldOfView != 30)
+        {
+            this.transform.localPosition = new Vector3(0f, -0.173f, -0.58f);
+            aimCamera.fieldOfView = 30;
+            playerCamera.fieldOfView = 60;
+            aimCamera.nearClipPlane = 0.1f;
         }
     }
 
@@ -84,5 +116,52 @@ public class PistolController : MonoBehaviour
     private void idlePistolAnim(int animID)
     {
         anim_pistol.Play("Idle0" + animID);
+    }
+
+    private void Fire()
+    {
+        m_LastFireTime = Time.time;
+
+        m_NextAllowedFireTime = Time.time + ProjectileTapFiringRate;
+
+        bulletTrail.Play();
+        anim_pistol.Play("Fire");
+        bulletFlash.enabled = true;
+        pistolSoundSource.clip = pistolFire;
+        pistolSoundSource.Play();
+    }
+
+    private void DryFire()
+    {
+
+        if (pistolSoundSource != null)
+        {
+            pistolSoundSource.pitch = Time.timeScale;
+            pistolSoundSource.PlayOneShot(SoundDryFire);
+        }
+
+        //DisableFiring();
+
+        m_LastFireTime = Time.time;
+
+    }
+
+    private bool OnAttempt_Fire()
+    {
+
+        // weapon can only be fired when firing rate allows it
+        if (Time.time < m_NextAllowedFireTime)
+            return false;
+
+        /*if (!Player.DepleteAmmo.Try())
+        {
+            DryFire();
+            return false;
+        }*/
+
+        Fire();
+
+        return true;
+
     }
 }
