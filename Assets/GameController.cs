@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class GameController : MonoBehaviour
 {
@@ -10,11 +12,17 @@ public class GameController : MonoBehaviour
 
     public PistolController pistol;
 
+    public FirstPersonController player;
+    public Text pistolBulletsUI;
+
+    public int chasedByEnemies = 0;
+
     //public InventoryStateMachine inventorySM;
     //public InventoryStates invStates;
     // Start is called before the first frame update
     void Start()
     {
+        pistolBulletsUI.gameObject.SetActive(false);
         weaponDisplay.SetActive(false);
     }
 
@@ -38,7 +46,20 @@ public class GameController : MonoBehaviour
         {
             weaponState = 2;
             weaponDisplay.SetActive(true);
+            pistolBulletsUI.gameObject.SetActive(true);
+            updateBulletsPistol();
             //inventorySM.ChangeState(invStates.knifeItem);
         }
+        if (itemName == "Pistol_ammo_pickup")
+        {
+            player.pistolBullets += 8;
+            updateBulletsPistol();
+            //inventorySM.ChangeState(invStates.knifeItem);
+        }
+    }
+
+    public void updateBulletsPistol()
+    {
+        pistolBulletsUI.text = "Ammo: " + player.loadedBullets + "/" + player.pistolBullets;
     }
 }

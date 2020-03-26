@@ -11,6 +11,7 @@ TagManager:
   - Terrain
   - Pickup
   - GameManager
+  - Enemy
   layers:
   - Default
   - TransparentFX

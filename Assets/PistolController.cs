@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class PistolController : MonoBehaviour
 {
@@ -40,6 +41,12 @@ public class PistolController : MonoBehaviour
     public Camera aimCamera;
     public Camera playerCamera;
 
+    public FirstPersonController player;
+
+    private RaycastHit hit;
+
+    public Transform bulletStart;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,7 +76,23 @@ public class PistolController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            anim_pistol.Play("StandardReload");
+            if(player.pistolBullets > 0)
+            {
+                anim_pistol.Play("StandardReload");
+
+                if(player.pistolBullets >= player.maxPistolBullets)
+                {
+                    player.loadedBullets = player.maxPistolBullets;
+                    player.pistolBullets -=8;
+                }
+                else
+                {
+                    player.loadedBullets = player.pistolBullets;
+                    player.pistolBullets = 0;
+                }
+                gameManager.updateBulletsPistol();
+            }
+            
         }
 
         if (!waitWithAnim)
@@ -129,6 +152,21 @@ public class PistolController : MonoBehaviour
         bulletFlash.enabled = true;
         pistolSoundSource.clip = pistolFire;
         pistolSoundSource.Play();
+        player.loadedBullets--;
+        gameManager.updateBulletsPistol();
+
+        Ray ray = Camera.main.ViewportPointToRay(new Vector2(.5f, .5f));
+
+        ray.origin = bulletStart.position;
+
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                Debug.Log("hit");
+                //hit.collider.gameObject.GetComponent<enemyAI>(); get the enemy script to reduce health
+            }
+        }
     }
 
     private void DryFire()
@@ -153,11 +191,11 @@ public class PistolController : MonoBehaviour
         if (Time.time < m_NextAllowedFireTime)
             return false;
 
-        /*if (!Player.DepleteAmmo.Try())
+        if (player.loadedBullets == 0)
         {
             DryFire();
             return false;
-        }*/
+        }
 
         Fire();
 
