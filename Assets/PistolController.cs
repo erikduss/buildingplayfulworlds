@@ -163,7 +163,7 @@ public class PistolController : MonoBehaviour
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                Debug.Log("hit");
+                Destroy(hit.collider.gameObject);
                 //hit.collider.gameObject.GetComponent<enemyAI>(); get the enemy script to reduce health
             }
         }
