@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
 
     public int chasedByEnemies = 0;
 
+    public int enemyCount = 0;
+
     //public InventoryStateMachine inventorySM;
     //public InventoryStates invStates;
     // Start is called before the first frame update
