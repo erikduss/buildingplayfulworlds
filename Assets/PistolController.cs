@@ -82,11 +82,19 @@ public class PistolController : MonoBehaviour
 
                 if(player.pistolBullets >= player.maxPistolBullets)
                 {
+                    if(player.loadedBullets > 0)
+                    {
+                        player.pistolBullets += player.loadedBullets;
+                    }
                     player.loadedBullets = player.maxPistolBullets;
                     player.pistolBullets -=8;
                 }
                 else
                 {
+                    if (player.loadedBullets > 0)
+                    {
+                        player.pistolBullets += player.loadedBullets;
+                    }
                     player.loadedBullets = player.pistolBullets;
                     player.pistolBullets = 0;
                 }
@@ -159,7 +167,7 @@ public class PistolController : MonoBehaviour
 
         ray.origin = bulletStart.position;
 
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit, 10000))
         {
             if (hit.collider.CompareTag("Enemy"))
             {

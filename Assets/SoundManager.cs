@@ -13,6 +13,9 @@ public class SoundManager : MonoBehaviour
     public List<AudioClip> femaleVoice1AttackSounds = new List<AudioClip>();
     public List<AudioClip> femaleVoice1DeathSounds = new List<AudioClip>();
     public List<AudioClip> femaleVoice1HurtSounds = new List<AudioClip>();
+    
+    public List<AudioClip> maleVoice1DeathSounds = new List<AudioClip>();
+    public List<AudioClip> maleVoice1HurtSounds = new List<AudioClip>();
 
     // Start is called before the first frame update
     void Start()
@@ -36,14 +39,14 @@ public class SoundManager : MonoBehaviour
         playerAudio.PlayOneShot(femaleVoice1AttackSounds[Random.Range(0, (femaleVoice1AttackSounds.Count - 1))]);
     }
 
-    public void PlayDeathSound_Female1()
+    public void PlayDeathSound_Male1()
     {
-        playerAudio.PlayOneShot(femaleVoice1DeathSounds[Random.Range(0, (femaleVoice1DeathSounds.Count - 1))]);
+        playerAudio.PlayOneShot(maleVoice1DeathSounds[Random.Range(0, (maleVoice1DeathSounds.Count - 1))]);
     }
 
-    public void PlayHurtSound_Female1()
+    public void PlayHurtSound_Male1()
     {
-        playerAudio.PlayOneShot(femaleVoice1HurtSounds[Random.Range(0, (femaleVoice1HurtSounds.Count - 1))]);
+        playerAudio.PlayOneShot(maleVoice1HurtSounds[Random.Range(0, (maleVoice1HurtSounds.Count - 1))]);
     }
 
     public void PlayAttackSound_Female2(AudioSource enemySource)

@@ -11,8 +11,6 @@ public class EnemyController : MonoBehaviour
     private bool canAttack = true;
     public bool isAttacking = false;
 
-    public bool kicked = false;
-
     private NavMeshAgent agent;
 
     private FirstPersonController playerScript;
@@ -54,7 +52,7 @@ public class EnemyController : MonoBehaviour
         {
             return;
         }
-        if (Vector3.Distance(player.position, this.transform.position) < 100)
+        if (Vector3.Distance(player.position, this.transform.position) < 500)
         {
             Vector3 direction = player.position - this.transform.position;
             float angle = 0;
@@ -94,7 +92,6 @@ public class EnemyController : MonoBehaviour
                     agent.speed = 2f;
                 }
                 anim.SetFloat("Speed", agent.speed);
-                //anim.SetBool("IsWalking", true);
                 isAttacking = false;
                 anim.SetBool("IsAttacking", isAttacking);
             }
@@ -105,18 +102,8 @@ public class EnemyController : MonoBehaviour
 
                 if (canAttack)
                 {
-                        int attackChoice = Random.Range(1, 10); //The NPC has a chance to do a kick attack even if the player is not blocking
-
-                        if (attackChoice == 1) //The NPC ignores the block most of the times
-                        {
-                            StartCoroutine(attackCooldown(2));
-                            Attack(0);
-                        }
-                        else
-                        {
-                            StartCoroutine(attackCooldown(5));
-                            Attack(Random.Range(1, 4)); //melee kick is a special move for if the player is blocking
-                        }
+                   StartCoroutine(attackCooldown(5));
+                   Attack(Random.Range(1, 4)); //melee kick is a special move for if the player is blocking
                 }
                 
             }
@@ -131,11 +118,6 @@ public class EnemyController : MonoBehaviour
     {
         switch (attackID)
         {
-            case 0:
-                anim.Play("melee_kick");
-                kicked = true;
-                StartCoroutine(playAttackSound(0.375f, false));
-                break;
             case 1:
                 anim.Play("melee_Combo_2");
                 StartCoroutine(playAttackSound(0.75f, true));
@@ -169,10 +151,6 @@ public class EnemyController : MonoBehaviour
         canAttack = false;
         yield return new WaitForSeconds(waitingTime);
         canAttack = true;
-        if (kicked)
-        {
-            kicked = false;
-        }
     }
 
     public void TakeDamage(int damage)
@@ -181,6 +159,10 @@ public class EnemyController : MonoBehaviour
         {
             return;
         }
+
+        agent.destination = this.transform.position;
+        agent.speed = 0f;
+
         enemyHealth -= damage;
         anim.Play("Hurt_Back");
         StunEnemy(1);
@@ -207,18 +189,22 @@ public class EnemyController : MonoBehaviour
             switch (deathPos)
             {
                 case "front":
+                    anim.SetBool("Dead", true);
                     anim.Play("Died_FrontFall");
                     enemyDied = true;
                     break;
                 case "back":
+                    anim.SetBool("Dead", true);
                     anim.Play("Died_BackFall");
                     enemyDied = true;
                     break;
                 case "right":
+                    anim.SetBool("Dead", true);
                     anim.Play("Died_RightFall");
                     enemyDied = true;
                     break;
                 case "left":
+                    anim.SetBool("Dead", true);
                     anim.Play("Died_LeftFall");
                     enemyDied = true;
                     break;
@@ -258,8 +244,10 @@ public class EnemyController : MonoBehaviour
     private IEnumerator applyStunTime(int waitingTime)
     {
         stunned = true;
+        anim.SetBool("Stunned", true);
         yield return new WaitForSeconds(waitingTime);
         stunned = false;
+        anim.SetBool("Stunned", false);
     }
 
     private IEnumerator DeleteEnemy()

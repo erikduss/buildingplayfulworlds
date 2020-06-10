@@ -38,12 +38,12 @@ public class weaponController : MonoBehaviour
                 if (playerCanSeeEnemy)
                 {
                     soundManager.PlayHitSound();
-                    soundManager.PlayHurtSound_Female1();
+                    soundManager.PlayHurtSound_Male1();
                 }
                 else
                 {
                     soundManager.PlayHitSound();
-                    soundManager.PlayHurtSound_Female1();
+                    soundManager.PlayHurtSound_Male1();
                 }
             
         }

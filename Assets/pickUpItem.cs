@@ -9,11 +9,13 @@ public class pickUpItem : MonoBehaviour
 
     private GameController gameManager;
     public Text pickupText;
+    public Image crosshairImage;
 
     void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
         pickupText.gameObject.SetActive(false);
+        crosshairImage.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -30,8 +32,19 @@ public class pickUpItem : MonoBehaviour
             pickupText.gameObject.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E))
             {
-                gameManager.ItemPickedUp(this.gameObject.name);
+                if(gameObject.tag == "Pickup")
+                {
+                    gameManager.ItemPickedUp(this.gameObject.name);
+                }
+                else
+                {
+                    gameManager.ItemPickedUp(this.gameObject.tag);
+                }
                 pickupText.gameObject.SetActive(false);
+                if(crosshairImage.gameObject.activeInHierarchy != true)
+                {
+                    crosshairImage.gameObject.SetActive(true);
+                }
                 Destroy(this.gameObject);
             }
         }

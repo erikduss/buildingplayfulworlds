@@ -17,7 +17,14 @@ public class GameController : MonoBehaviour
 
     public int chasedByEnemies = 0;
 
+    public GameObject EnemyPrefab;
+    public List<GameObject> enemySpawnPoints = new List<GameObject>();
+
     public int enemyCount = 0;
+
+    private int maxEnemies = 10;
+
+    private bool canSpawnEnemy = true;
 
     //public InventoryStateMachine inventorySM;
     //public InventoryStates invStates;
@@ -35,6 +42,30 @@ public class GameController : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (canSpawnEnemy)
+        {
+            if(enemyCount < maxEnemies)
+            {
+                int cooldown = Random.Range(5, 30);
+                StartCoroutine(enemySpawnCooldown(cooldown));
+                spawnEnemy();
+            }
+        }
+    }
+
+    private IEnumerator enemySpawnCooldown(float cooldown)
+    {
+        canSpawnEnemy = false;
+        yield return new WaitForSeconds(cooldown);
+        canSpawnEnemy = true;
+    }
+
+    public void spawnEnemy()
+    {
+        int spawnLocation = Random.Range(0, enemySpawnPoints.Count - 1);
+        Instantiate(EnemyPrefab, enemySpawnPoints[spawnLocation].transform.position, Quaternion.identity);
+        enemyCount++;
     }
 
     public void ItemPickedUp(string itemName)
@@ -52,7 +83,7 @@ public class GameController : MonoBehaviour
             updateBulletsPistol();
             //inventorySM.ChangeState(invStates.knifeItem);
         }
-        if (itemName == "Pistol_ammo_pickup")
+        if (itemName == "PistolAmmo")
         {
             player.pistolBullets += 8;
             updateBulletsPistol();
