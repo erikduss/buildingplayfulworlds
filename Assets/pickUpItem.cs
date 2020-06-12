@@ -8,14 +8,10 @@ public class pickUpItem : MonoBehaviour
     // Start is called before the first frame update
 
     private GameController gameManager;
-    public Text pickupText;
-    public Image crosshairImage;
 
     void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
-        pickupText.gameObject.SetActive(false);
-        crosshairImage.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -28,8 +24,7 @@ public class pickUpItem : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log(this.gameObject.name);
-            pickupText.gameObject.SetActive(true);
+            gameManager.setPickupText(true);
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if(gameObject.tag == "Pickup")
@@ -40,11 +35,7 @@ public class pickUpItem : MonoBehaviour
                 {
                     gameManager.ItemPickedUp(this.gameObject.tag);
                 }
-                pickupText.gameObject.SetActive(false);
-                if(crosshairImage.gameObject.activeInHierarchy != true)
-                {
-                    crosshairImage.gameObject.SetActive(true);
-                }
+                gameManager.setPickupText(false);
                 Destroy(this.gameObject);
             }
         }
@@ -52,6 +43,6 @@ public class pickUpItem : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        pickupText.gameObject.SetActive(false);
+        gameManager.setPickupText(false);
     }
 }

@@ -16,6 +16,8 @@ TagManager:
   - PistolAmmo
   - MiniMap
   - SpawnLocation
+  - Powerup_Ammo
+  - Powerup_Objective
   layers:
   - Default
   - TransparentFX

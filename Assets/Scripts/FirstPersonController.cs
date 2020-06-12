@@ -49,11 +49,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public bool playerDead;
 
+        public GameController gameManager;
+
         //public GameController gameManager;
 
         // Use this for initialization
         private void Start()
         {
+            gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
@@ -246,6 +249,23 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void RotateView()
         {
             m_MouseLook.LookRotation (transform, m_Camera.transform);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.gameObject.tag == "Powerup_Ammo" || other.gameObject.tag == "Powerup_Objective")
+            {
+                if(other.gameObject.tag == "Powerup_Ammo")
+                {
+                    gameManager.resetAmmoPlacements();
+                    Destroy(other.gameObject);
+                }
+                else if (other.gameObject.tag == "Powerup_Objective")
+                {
+                    Destroy(other.gameObject);
+                }
+                
+            }
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)

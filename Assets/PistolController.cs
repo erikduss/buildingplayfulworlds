@@ -7,7 +7,7 @@ public class PistolController : MonoBehaviour
 {
 
     // projectile
-    public float ProjectileTapFiringRate = 0.1f;        // minimum delay between shots fired when fire button is tapped quickly and repeatedly
+    private float ProjectileTapFiringRate = 0.8f;        // minimum delay between shots fired when fire button is tapped quickly and repeatedly
     protected float m_LastFireTime = 0.0f;
     protected float m_OriginalProjectileSpawnDelay = 0.0f;
 
@@ -153,7 +153,7 @@ public class PistolController : MonoBehaviour
     {
         m_LastFireTime = Time.time;
 
-        m_NextAllowedFireTime = Time.time + ProjectileTapFiringRate;
+        m_NextAllowedFireTime = (m_LastFireTime + ProjectileTapFiringRate);
 
         bulletTrail.Play();
         anim_pistol.Play("Fire");
@@ -197,7 +197,9 @@ public class PistolController : MonoBehaviour
 
         // weapon can only be fired when firing rate allows it
         if (Time.time < m_NextAllowedFireTime)
+        {
             return false;
+        }
 
         if (player.loadedBullets == 0)
         {
