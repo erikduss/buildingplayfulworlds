@@ -61,6 +61,7 @@ public class DontDestroyOnLoad : MonoBehaviour
             progress = asyncLoad.progress;
             asyncLoad.allowSceneActivation = true;
             SceneManager.LoadScene("GameScene"); // Dont know why the async doesnt work, temporary load fix.
+            Destroy(this.gameObject);
         }
     }
 

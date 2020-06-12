@@ -6,6 +6,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class weaponController : MonoBehaviour
 {
     private EnemyController enemyScript;
+    private GameController gameManager;
     private FirstPersonController player;
     private Camera mainCamera;
 
@@ -19,6 +20,7 @@ public class weaponController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         enemyScript = transform.root.GetComponent<EnemyController>();
         soundManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<SoundManager>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
         mainCamera = Camera.main; //the player's camera
     }
 
@@ -38,13 +40,17 @@ public class weaponController : MonoBehaviour
                 if (playerCanSeeEnemy)
                 {
                     soundManager.PlayHitSound();
+                    player.health -= 40;
                     soundManager.PlayHurtSound_Male1();
+                    gameManager.updatePlayerHealthText();
                 }
                 else
                 {
                     soundManager.PlayHitSound();
+                    player.health -= 40;
                     soundManager.PlayHurtSound_Male1();
-                }
+                    gameManager.updatePlayerHealthText();
+            }
             
         }
     }

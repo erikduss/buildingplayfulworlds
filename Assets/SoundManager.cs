@@ -20,6 +20,11 @@ public class SoundManager : MonoBehaviour
     public AudioSource objectiveAudio;
     public AudioClip objectiveHint;
 
+    public AudioSource soundEffects;
+
+    public AudioClip ReloadGun;
+    public AudioClip pickupGun;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +35,16 @@ public class SoundManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void playPickupGunSound()
+    {
+        soundEffects.PlayOneShot(pickupGun);
+    }
+
+    public void playReloadGunSound()
+    {
+        soundEffects.PlayOneShot(ReloadGun);
     }
 
     public void playObjectiveHintSound()

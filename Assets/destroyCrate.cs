@@ -6,7 +6,7 @@ public class destroyCrate : MonoBehaviour
 {
 
     public GameObject DestroyedSpawnObject;
-    public GameController gameManger;
+    private GameController gameManger;
 
     // Start is called before the first frame update
     void Start()

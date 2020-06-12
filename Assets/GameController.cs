@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
 
@@ -30,6 +31,7 @@ public class GameController : MonoBehaviour
     private bool canSpawnPowerUp = false;
 
     public Image crosshairImage;
+    public Text PlayerHealthText;
 
     public GameObject ammoPickupParent;
     public GameObject ammoPrefab;
@@ -139,6 +141,16 @@ public class GameController : MonoBehaviour
     public void setPickupText(bool isActive)
     {
         pickupText.gameObject.SetActive(isActive);
+    }
+
+    public void updatePlayerHealthText()
+    {
+        if (player.health < 0)
+        {
+            player.health = 0;
+            SceneManager.LoadScene("SplashScene");
+        }
+        PlayerHealthText.text = "Health: " + player.health;
     }
 
     public void ItemPickedUp(string itemName)

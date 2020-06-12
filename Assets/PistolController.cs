@@ -47,10 +47,13 @@ public class PistolController : MonoBehaviour
 
     public Transform bulletStart;
 
+    public SoundManager soundManager;
+
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameController>();
+        soundManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<SoundManager>();
         pistolSoundSource = this.GetComponent<AudioSource>();
         anim_pistol = this.GetComponent<Animation>();
         m_NextAllowedFireTime = Time.time;
@@ -76,9 +79,10 @@ public class PistolController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if(player.pistolBullets > 0)
+            if(player.pistolBullets > 0 && player.loadedBullets != player.maxPistolBullets)
             {
                 anim_pistol.Play("StandardReload");
+                soundManager.playReloadGunSound();
 
                 if(player.pistolBullets >= player.maxPistolBullets)
                 {
@@ -139,6 +143,7 @@ public class PistolController : MonoBehaviour
     public void pickUpPistolAnim()
     {
         anim_pistol.Play("Wield");
+        soundManager.playPickupGunSound();
         waitWithAnim = true;
         StartCoroutine("WaitWithNewAnim", Random.Range(2, 10));
         playedStartAnimation = true;
