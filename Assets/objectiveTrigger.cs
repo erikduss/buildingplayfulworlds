@@ -27,12 +27,16 @@ public class objectiveTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            if(gameManager.weaponState >= 1) // player has knife
+            if(gameManager.weaponState >= 3) // player has knife
             {
                 objectiveText.gameObject.SetActive(true);
                 objectiveText.text = "Press E to cut through the boxes";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    if(gameManager.currentObjective < 2)
+                    {
+                        gameManager.currentObjective++;
+                    }
                     objectiveText.gameObject.SetActive(false);
                     Destroy(objectiveBlocker.gameObject);
                     Destroy(this.gameObject);

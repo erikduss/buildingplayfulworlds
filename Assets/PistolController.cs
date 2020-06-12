@@ -59,7 +59,7 @@ public class PistolController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.weaponState != 2)
+        if (gameManager.weaponState < 2)
         {
             return;
         }

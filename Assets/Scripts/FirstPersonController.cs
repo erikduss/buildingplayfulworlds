@@ -51,6 +51,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public GameController gameManager;
 
+        public int health = 100;
+
         //public GameController gameManager;
 
         // Use this for initialization
@@ -258,11 +260,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 if(other.gameObject.tag == "Powerup_Ammo")
                 {
                     gameManager.resetAmmoPlacements();
+                    gameManager.amountOfActivePowerups--;
                     Destroy(other.gameObject);
                 }
                 else if (other.gameObject.tag == "Powerup_Objective")
                 {
                     Destroy(other.gameObject);
+                    gameManager.ObjectivePowerupActivate();
+                    gameManager.amountOfActivePowerups--;
                 }
                 
             }

@@ -17,6 +17,9 @@ public class SoundManager : MonoBehaviour
     public List<AudioClip> maleVoice1DeathSounds = new List<AudioClip>();
     public List<AudioClip> maleVoice1HurtSounds = new List<AudioClip>();
 
+    public AudioSource objectiveAudio;
+    public AudioClip objectiveHint;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,11 @@ public class SoundManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void playObjectiveHintSound()
+    {
+        objectiveAudio.PlayOneShot(objectiveHint);
     }
 
     public void PlayHitSound()

@@ -38,11 +38,21 @@ public class GameController : MonoBehaviour
     public List<GameObject> powerups = new List<GameObject>();
     public List<Transform> powerupSpawnLocations = new List<Transform>();
 
+    public List<Transform> objectivePositions = new List<Transform>();
+
+    public GameObject objectiveGameObject;
+    private SoundManager soundManager;
+
+    public int amountOfActivePowerups = 0;
+
+    public int currentObjective = 0;
+
     //public InventoryStateMachine inventorySM;
     //public InventoryStates invStates;
     // Start is called before the first frame update
     void Start()
     {
+        soundManager = GetComponent<SoundManager>();
         pistolBulletsUI.gameObject.SetActive(false);
         weaponDisplay.SetActive(false);
         foreach(Transform child in ammoPickupParent.transform)
@@ -65,13 +75,13 @@ public class GameController : MonoBehaviour
         {
             if(enemyCount < maxEnemies)
             {
-                int cooldown = Random.Range(5, 30);
+                int cooldown = Random.Range(5, 25);
                 StartCoroutine(enemySpawnCooldown(cooldown));
                 spawnEnemy();
             }
         }
 
-        if (canSpawnPowerUp)
+        if (canSpawnPowerUp && amountOfActivePowerups == 0)
         {
             spawnPowerup();
         }
@@ -82,6 +92,12 @@ public class GameController : MonoBehaviour
         canSpawnEnemy = false;
         yield return new WaitForSeconds(cooldown);
         canSpawnEnemy = true;
+    }
+
+    public void ObjectivePowerupActivate()
+    {
+        objectiveGameObject.transform.position = objectivePositions[currentObjective].position;
+        soundManager.playObjectiveHintSound();
     }
 
     public void spawnEnemy()
@@ -96,6 +112,7 @@ public class GameController : MonoBehaviour
         GameObject powerup = powerups[Random.Range(0, 2)];
         Instantiate(powerup, powerupSpawnLocations[Random.Range(0, powerupSpawnLocations.Count - 1)].position, Quaternion.identity);
         float cooldown = Random.Range(30, 90);
+        amountOfActivePowerups++;
         StartCoroutine(powerUpSpawnCooldown(cooldown));
     }
 
@@ -128,10 +145,8 @@ public class GameController : MonoBehaviour
     {
         if(itemName == "Knife_pickup")
         {
-            if (weaponState < 1)
-            {
-                weaponState = 1;
-            }
+            weaponState = 3;
+            currentObjective++;
             //inventorySM.ChangeState(invStates.knifeItem);
         }
         if (itemName == "Pistol_pickup")
