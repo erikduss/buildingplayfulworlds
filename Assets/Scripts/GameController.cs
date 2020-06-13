@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
 
     public int enemyCount = 0;
 
-    private int maxEnemies = 10;
+    private int maxEnemies = 15;
 
     private bool canSpawnEnemy = true;
     private bool canSpawnPowerUp = false;
@@ -77,7 +77,7 @@ public class GameController : MonoBehaviour
         {
             if(enemyCount < maxEnemies)
             {
-                int cooldown = Random.Range(5, 25);
+                int cooldown = Random.Range(5, 15);
                 StartCoroutine(enemySpawnCooldown(cooldown));
                 spawnEnemy();
             }
